@@ -1,25 +1,28 @@
-import logo from './logo.svg';
+import React, { createContext, useState,useEffect } from 'react';
+import Header from './Header';
+import Body from './Body';
 import './App.css';
 
+const newdata=sessionStorage.getItem("data");
+
+const DataContext = createContext();
+
 function App() {
+  const [data, setData] = useState(newdata ? JSON.parse(newdata) : []);
+
+  useEffect(()=>{
+    sessionStorage.setItem("data",JSON.stringify(data))
+  },[data])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <DataContext.Provider value={{ data, setData }}>
+      <Header />
+      <hr />
+      <Body />
+    </DataContext.Provider>
   );
 }
 
+export { DataContext }; 
 export default App;
+
